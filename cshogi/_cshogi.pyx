@@ -59,7 +59,7 @@ cdef modify_move(np.ndarray[np.uint16_t, ndim=1] move):
 
 	return move
 
-cdef load_packed_sfen_value(str path):
+def load_packed_sfen_value(str path):
 	packed_sfen_value = np.fromfile(path, dtype=PackedSfenValue)
 	packed_sfen_value['move'] = modify_move(packed_sfen_value['move'])
 	return packed_sfen_value
