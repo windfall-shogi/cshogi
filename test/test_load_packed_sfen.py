@@ -29,12 +29,32 @@ def load_data(file_name):
     return data_list
 
 
+def modify_move(move):
+    # 駒打ちのフラグを取り出す
+    drop_mask = move & 0x4000
+
+    drop_flag = drop_mask >> 14
+    drop_offset = (drop_flag * 80) << 7
+    move += drop_offset
+    # 駒打ちのフラグを消す
+    move ^= drop_mask
+
+    # 成りのフラグを取り出す
+    promotion_mask = move & 0x8000
+    promotion_mask |= promotion_mask >> 1
+    # 成りのフラグをbit15からbit14に移動
+    move ^= promotion_mask
+
+    return move
+
+
 class TestLoadPackedSfen(unittest.TestCase):
     # noinspection PyUnresolvedReferences
     def test_loader(self):
         data_dir = '../../../data'
         bin_data_list = np.fromfile(os.path.join(data_dir, 'head0.bin'),
                                     dtype=cshogi.PackedSfenValue)
+        bin_data_list['move'] = modify_move(bin_data_list['move'])
         txt_data_list = load_data(os.path.join(data_dir, 'head0.txt'))
 
         board_bin = cshogi.Board()
@@ -51,11 +71,8 @@ class TestLoadPackedSfen(unittest.TestCase):
                 self.assertEqual(board_bin.turn, board_txt.turn)
                 # self.assertEqual(board_bin, board_txt)
 
-                if txt_data['move'][1] == '*':
-                    self.assertEqual((bin_data['move'] >> 14) & 0x1, 1)
-                    # self.assertGreaterEqual((bin_data['move'] >> 7) & 0x3F, 81)
-                # self.assertEqual(cshogi.move_to_usi(bin_data['move']),
-                #                  txt_data['move'])
+                self.assertEqual(cshogi.move_to_usi(bin_data['move']),
+                                 txt_data['move'])
                 self.assertEqual(bin_data['score'], txt_data['score'])
                 self.assertEqual(bin_data['gamePly'], txt_data['gamePly'])
 
