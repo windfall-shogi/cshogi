@@ -450,6 +450,13 @@ cdef class Board:
 			"height": str(height * scale),
 			"viewBox": "0 0 {} {}".format(width, height),
 		})
+		ET.SubElement(svg, "rect", {
+			"x": str(0),
+			"y": str(0),
+			"width": str(width),
+			"height": str(height),
+			"fill": "white"
+		})
 
 		defs = ET.SubElement(svg, "defs")
 		for piece_def in SVG_PIECE_DEFS:
