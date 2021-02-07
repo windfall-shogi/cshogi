@@ -565,6 +565,12 @@ cdef extern from "cshogi.h":
 	int __move_rotate(const int move)
 	string __move_to_usi(const int move)
 	string __move_to_csa(const int move)
+	
+cdef extern from "decode.hpp":
+	void hcpe_decode_with_result(np.ndarray, np.ndarray, np.ndarray, np.ndarray)
+	void hcpe_decode_with_move(np.ndarray, np.ndarray, np.ndarray, np.ndarray);
+	void hcpe_decode_with_move_result(np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray);
+	void hcpe_decode_with_value(np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray);
 
 cdef class LegalMoveList:
 	cdef __LegalMoveList __ml
