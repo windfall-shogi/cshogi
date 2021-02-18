@@ -7,6 +7,7 @@
 #include "usi.hpp"
 #include "book.hpp"
 #include "mate.h"
+#include "decode.hpp"
 
 bool nyugyoku(const Position& pos);
 
@@ -214,6 +215,12 @@ public:
 	unsigned long long bookKey() {
 		return Book::bookKey(pos);
 	}
+
+	float convert_feature_with_result(const int result,
+                                    char* ptr_features1,
+                                    char* ptr_features2) {
+    return get_feature_with_result(pos, result, ptr_features1, ptr_features2);
+  }
 
 	Position pos;
 

@@ -136,3 +136,19 @@ void hcpe_decode_with_value(np::ndarray ndhcpe, np::ndarray ndfeatures1, np::nda
 		*value = score_to_value((Score)hcpe->eval);
 	}
 }
+
+/* 上の関数とは異なり一つの局面を処理する */
+float get_feature_with_result(const Position &pos, const int result,
+                              char *ptr_features1, char *ptr_features2) {
+  features1_t *features1 = reinterpret_cast<features1_t *>(ptr_features1);
+  features2_t *features2 = reinterpret_cast<features2_t *>(ptr_features2);
+
+  // set all zero
+  std::fill_n((float *)features1, sizeof(features1_t) / sizeof(float), 0.0f);
+  std::fill_n((float *)features2, sizeof(features2_t) / sizeof(float), 0.0f);
+
+  make_input_features(pos, features1, features2);
+  const auto r = make_result(static_cast<GameResult>(result), pos);
+
+  return r;
+}

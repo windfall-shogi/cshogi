@@ -260,6 +260,8 @@ cdef extern from "cshogi.h":
 		void piece_planes_rotate(char* mem)
 		bool isOK()
 		unsigned long long bookKey()
+		float convert_feature_with_result(const int result, 
+										  char* feature1, char* feature2)
 
 	int __piece_to_piece_type(const int p)
 
@@ -540,6 +542,9 @@ cdef class Board:
 	def _repr_svg_(self):
 		return self.to_svg()
 
+	def convert_feature_with_result(self, result, np.ndarray feature1, np.ndarray feature2):
+		return self.__board.convert_feature_with_result(result, feature1.data, feature2.data)
+
 def piece_to_piece_type(int p):
 	return __piece_to_piece_type(p)
 
@@ -566,12 +571,6 @@ cdef extern from "cshogi.h":
 	string __move_to_usi(const int move)
 	string __move_to_csa(const int move)
 	
-cdef extern from "decode.hpp":
-	void hcpe_decode_with_result(np.ndarray, np.ndarray, np.ndarray, np.ndarray)
-	void hcpe_decode_with_move(np.ndarray, np.ndarray, np.ndarray, np.ndarray);
-	void hcpe_decode_with_move_result(np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray);
-	void hcpe_decode_with_value(np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray);
-
 cdef class LegalMoveList:
 	cdef __LegalMoveList __ml
 
